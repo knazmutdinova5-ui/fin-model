@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Финансовая модель — Агрофирма</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F4F6F3;color:#1a1a1a;min-height:100vh;padding:2rem 1rem}
+.page{max-width:960px;margin:0 auto}
+.hdr{display:flex;align-items:center;gap:14px;margin-bottom:2rem}
+.hlogo{width:44px;height:44px;border-radius:10px;background:#3B6D11;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hlogo i{font-size:22px;color:#fff}
+.htitle{font-size:22px;font-weight:600;color:#1a1a1a}
+.hsub{font-size:13px;color:#666;margin-top:2px}
+.sec-title{font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.06em;margin:1.5rem 0 .75rem}
+.card{background:#fff;border:1px solid #e2e8e0;border-radius:12px;padding:1.25rem;margin-bottom:1rem}
+.card.disabled{opacity:.5}
+.ndvbar{background:#fff;border:1px solid #e2e8e0;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.ndvbar label{font-size:13px;color:#555;display:flex;align-items:center;gap:6px;min-width:60px}
+.ndvbar input[type=range]{flex:1;min-width:120px;accent-color:#3B6D11}
+.ndvbar .val{font-size:15px;font-weight:600;color:#1a1a1a;min-width:44px;text-align:right}
+.dirs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:.5rem}
+.dhead{display:flex;align-items:center;gap:10px;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid #edf0eb}
+.dicon{width:30px;height:30px;border-radius:7px;background:#EAF3DE;display:flex;align-items:center;justify-content:center}
+.dicon i{font-size:16px;color:#3B6D11}
+.dname{font-size:14px;font-weight:600;color:#1a1a1a;flex:1}
+.tog{width:34px;height:19px;border-radius:10px;background:#3B6D11;border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.tog.off{background:#ccc}
+.tog::after{content:'';position:absolute;width:15px;height:15px;background:#fff;border-radius:50%;top:2px;left:17px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.tog.off::after{left:2px}
+.row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.rl{font-size:12px;color:#666;min-width:98px}
+.row input[type=number]{width:115px;border:1px solid #dde5d8;border-radius:7px;padding:5px 8px;font-size:13px;background:#f7f9f5;color:#1a1a1a;text-align:right;outline:none}
+.row input[type=number]:focus{border-color:#639922;background:#fff}
+.row input[type=range]{flex:1;min-width:60px;accent-color:#3B6D11}
+.rv{font-size:12px;color:#666;min-width:38px;text-align:right}
+.dres{margin-top:10px;padding-top:10px;border-top:1px solid #edf0eb}
+.drow{display:flex;justify-content:space-between;font-size:12px;color:#666;margin-bottom:3px}
+.dgross{display:flex;justify-content:space-between;font-size:14px;font-weight:600;margin-top:6px;padding-top:6px;border-top:1px solid #edf0eb}
+.pos{color:#27500A}.neg{color:#991F1F}
+.opex-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:.625rem;margin-bottom:1rem}
+.opex-item{display:flex;align-items:center;gap:8px;padding:.5rem .75rem;background:#f7f9f5;border-radius:8px}
+.opex-lbl{font-size:12px;color:#555;flex:1;display:flex;align-items:center;gap:5px}
+.opex-lbl i{font-size:13px;color:#639922}
+.opex-item input[type=number]{width:110px;border:1px solid #dde5d8;border-radius:7px;padding:4px 8px;font-size:13px;background:#fff;color:#1a1a1a;text-align:right;outline:none}
+.opex-item input[type=number]:focus{border-color:#639922}
+.opex-item input[type=range]{width:90px;accent-color:#3B6D11}
+.opex-fixed{font-size:13px;font-weight:600;color:#27500A;min-width:80px;text-align:right}
+.opex-pctval{font-size:12px;color:#666;min-width:32px;text-align:right}
+.opex-calcval{font-size:13px;font-weight:500;color:#991F1F;min-width:80px;text-align:right}
+.opex-total-row{display:flex;justify-content:space-between;align-items:center;padding:.75rem 1rem;background:#fff8f0;border-radius:8px;border:1px solid #f0e0c8;margin-top:.25rem}
+.divider{height:1px;background:#e2e8e0;margin:1.5rem 0}
+.sum-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:1.25rem}
+.sum-card{background:#fff;border:1px solid #e2e8e0;border-radius:10px;padding:.875rem 1rem}
+.sum-lbl{font-size:11px;color:#666;margin-bottom:5px}
+.sum-val{font-size:20px;font-weight:600;color:#1a1a1a}
+.sum-val.pos{color:#27500A}.sum-val.neg{color:#991F1F}
+.wf-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.wf-lbl{font-size:12px;color:#555;min-width:140px;text-align:right}
+.wf-track{flex:1;height:22px;background:#edf0eb;border-radius:5px;overflow:hidden}
+.wf-fill{height:100%;border-radius:5px;transition:width .3s ease}
+.wf-num{font-size:12px;font-weight:600;min-width:100px;text-align:right}
+.footer{margin-top:2.5rem;text-align:center;font-size:11px;color:#aaa}
+input[type=range]{height:4px;cursor:pointer}
+@media(max-width:600px){
+  body{padding:1rem .5rem}
+  .dirs-grid,.opex-grid,.sum-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="hdr">
+  <div class="hlogo"><i class="ti ti-plant"></i></div>
+  <div>
+    <div class="htitle">Финансовая модель</div>
+    <div class="hsub">Агрофирма — управление по направлениям бизнеса</div>
+  </div>
+</div>
+
+<div class="ndvbar">
+  <label><i class="ti ti-receipt-tax"></i> НДС</label>
+  <input type="range" id="ndv" min="0" max="30" step="1" value="20" oninput="rc()">
+  <span class="val" id="ndvv">20%</span>
+</div>
+
+<div class="sec-title">Направления бизнеса</div>
+<div class="dirs-grid" id="dgrid"></div>
+
+<div class="divider"></div>
+
+<div class="sec-title"><i class="ti ti-building-factory" style="font-size:13px;vertical-align:-2px;margin-right:5px;color:#639922"></i>Общепроизводственные расходы <span style="font-weight:400;font-style:italic;text-transform:none;letter-spacing:0">(распределяются пропорционально выручке)</span></div>
+
+<div class="opex-grid">
+  <div class="opex-item">
+    <span class="opex-lbl"><i class="ti ti-truck"></i>Транспорт / логистика</span>
+    <input type="number" id="op_trans" value="0" min="0" step="500" oninput="rc()" placeholder="0">
+    <span style="font-size:12px;color:#666">₽</span>
+  </div>
+  <div class="opex-item">
+    <span class="opex-lbl"><i class="ti ti-car"></i>Содержание автопарка</span>
+    <input type="number" id="op_auto" value="0" min="0" step="500" oninput="rc()" placeholder="0">
+    <span style="font-size:12px;color:#666">₽</span>
+  </div>
+  <div class="opex-item">
+    <span class="opex-lbl"><i class="ti ti-gas-station"></i>Расходы на топливо</span>
+    <input type="range" id="op_fuel_pct" min="0" max="20" step="0.5" value="3" oninput="rc()">
+    <span class="opex-pctval" id="op_fuel_pctv">3%</span>
+    <span class="opex-calcval" id="op_fuel_v">0 ₽</span>
+  </div>
+  <div class="opex-item">
+    <span class="opex-lbl"><i class="ti ti-building-warehouse"></i>Аренда склада</span>
+    <span class="opex-fixed">30 000 ₽</span>
+  </div>
+  <div class="opex-item">
+    <span class="opex-lbl"><i class="ti ti-microscope"></i>Анализы кормов</span>
+    <span class="opex-fixed">10 000 ₽</span>
+  </div>
+  <div class="opex-item">
+    <span class="opex-lbl"><i class="ti ti-trash"></i>ТБО</span>
+    <span class="opex-fixed">1 500 ₽</span>
+  </div>
+  <div class="opex-item">
+    <span class="opex-lbl"><i class="ti ti-bolt"></i>Коммунальные услуги</span>
+    <span class="opex-fixed">22 000 ₽</span>
+  </div>
+  <div class="opex-item">
+    <span class="opex-lbl"><i class="ti ti-help-circle"></i>Прочие (непредвиденные)</span>
+    <input type="range" id="op_misc_pct" min="0" max="20" step="0.5" value="5" oninput="rc()">
+    <span class="opex-pctval" id="op_misc_pctv">5%</span>
+    <span class="opex-calcval" id="op_misc_v">0 ₽</span>
+  </div>
+</div>
+<div class="opex-total-row">
+  <span style="font-size:13px;font-weight:600;color:#1a1a1a">Итого ОПР</span>
+  <span style="font-size:16px;font-weight:700;color:#991F1F" id="opex-total">63 500 ₽</span>
+</div>
+
+<div class="divider"></div>
+
+<div class="sec-title">Итоговые показатели</div>
+<div class="sum-grid" id="sgrid"></div>
+
+<div class="card" style="margin-top:0">
+  <div style="font-size:13px;font-weight:600;color:#555;margin-bottom:1rem">Структура P&L</div>
+  <div id="wfbars"></div>
+</div>
+
+<div class="footer">Финансовая модель агрофирмы · все расчёты выполняются локально в браузере</div>
+</div>
+
+<script>
+const DIRS=[
+  {id:'plant',name:'Растениеводство',icon:'ti-plant-2'},
+  {id:'gen',  name:'Генетика',       icon:'ti-dna'},
+  {id:'dis',  name:'Дезинфекция',    icon:'ti-droplet'},
+  {id:'equip',name:'Оборудование',   icon:'ti-tool'},
+];
+const OPEX_FIXED=30000+10000+1500+22000;
+const st={};
+DIRS.forEach(d=>{st[d.id]={on:true,rev:0,cogs:30,fot:0,kpi:5};});
+
+function fmt(n){
+  const a=Math.abs(n);
+  if(a>=1e6)return (n/1e6).toFixed(2)+'\u00a0млн ₽';
+  if(a>=1e3)return (Math.round(n/100)/10).toFixed(1)+'\u00a0тыс ₽';
+  return Math.round(n)+' ₽';
+}
+
+function buildDirs(){
+  const g=document.getElementById('dgrid');
+  g.innerHTML='';
+  DIRS.forEach(d=>{
+    const s=st[d.id];
+    const c=document.createElement('div');
+    c.className='card'+(s.on?'':' disabled');
+    c.id='card-'+d.id;
+    c.innerHTML=`<div class="dhead">
+<div class="dicon"><i class="ti ${d.icon}"></i></div>
+<span class="dname">${d.name}</span>
+<button class="tog${s.on?'':' off'}" id="tog-${d.id}" onclick="toggle('${d.id}')" aria-label="Вкл/выкл ${d.name}" title="${s.on?'Отключить направление':'Включить направление'}"></button>
+</div>
+<div class="row"><span class="rl">Выручка (с НДС)</span><input type="number" id="rev-${d.id}" value="${s.rev}" min="0" step="1000" oninput="upd('${d.id}','rev',this.value)" placeholder="0"><span style="font-size:12px;color:#666">₽</span></div>
+<div class="row"><span class="rl">Себестоимость</span><input type="range" id="cogs-${d.id}" min="0" max="100" step="1" value="${s.cogs}" oninput="upd('${d.id}','cogs',this.value)"><span class="rv" id="cogsv-${d.id}">${s.cogs}%</span></div>
+<div class="row"><span class="rl">ФОТ</span><input type="number" id="fot-${d.id}" value="${s.fot}" min="0" step="1000" oninput="upd('${d.id}','fot',this.value)" placeholder="0"><span style="font-size:12px;color:#666">₽</span></div>
+<div class="row"><span class="rl">КПИ менеджерам</span><input type="range" id="kpi-${d.id}" min="0" max="30" step="0.5" value="${s.kpi}" oninput="upd('${d.id}','kpi',this.value)"><span class="rv" id="kpiv-${d.id}">${s.kpi}%</span></div>
+<div class="dres" id="res-${d.id}"></div>`;
+    g.appendChild(c);
+  });
+}
+
+function toggle(id){
+  st[id].on=!st[id].on;
+  document.getElementById('card-'+id).className='card'+(st[id].on?'':' disabled');
+  document.getElementById('tog-'+id).className='tog'+(st[id].on?'':' off');
+  document.getElementById('card-'+id).querySelectorAll('input').forEach(i=>i.disabled=!st[id].on);
+  rc();
+}
+
+function upd(id,f,v){
+  st[id][f]=parseFloat(v)||0;
+  const cv=document.getElementById('cogsv-'+id);
+  const kv=document.getElementById('kpiv-'+id);
+  if(cv)cv.textContent=Math.round(st[id].cogs)+'%';
+  if(kv)kv.textContent=st[id].kpi+'%';
+  rc();
+}
+
+function rc(){
+  const ndvPct=parseFloat(document.getElementById('ndv').value)||0;
+  document.getElementById('ndvv').textContent=ndvPct+'%';
+  const ndvK=ndvPct/100;
+
+  const fuelPct=parseFloat(document.getElementById('op_fuel_pct').value)||0;
+  const miscPct=parseFloat(document.getElementById('op_misc_pct').value)||0;
+  document.getElementById('op_fuel_pctv').textContent=fuelPct+'%';
+  document.getElementById('op_misc_pctv').textContent=miscPct+'%';
+
+  const trans=parseFloat(document.getElementById('op_trans').value)||0;
+  const auto_=parseFloat(document.getElementById('op_auto').value)||0;
+
+  let totRevEx=0;
+  const dirs=[];
+  DIRS.forEach(d=>{
+    const s=st[d.id];
+    if(!s.on){dirs.push({id:d.id,on:false});return;}
+    const rev=s.rev;
+    const ndv=rev*ndvK/(1+ndvK);
+    const revEx=rev-ndv;
+    totRevEx+=revEx;
+    dirs.push({id:d.id,on:true,rev,ndv,revEx,cogs:revEx*s.cogs/100,fot:s.fot,kpi:revEx*s.kpi/100});
+  });
+
+  const fuelAmt=totRevEx*fuelPct/100;
+  const miscAmt=totRevEx*miscPct/100;
+  document.getElementById('op_fuel_v').textContent=fmt(fuelAmt);
+  document.getElementById('op_misc_v').textContent=fmt(miscAmt);
+
+  const totalOpex=OPEX_FIXED+trans+auto_+fuelAmt+miscAmt;
+  document.getElementById('opex-total').textContent=fmt(totalOpex);
+
+  let totRev=0,totNdv=0,totCogs=0,totFot=0,totKpi=0,totGross=0;
+
+  dirs.forEach(d=>{
+    if(!d.on){
+      document.getElementById('res-'+d.id).innerHTML='<span style="font-size:12px;color:#999">Направление отключено — ОПР не распределяются</span>';
+      return;
+    }
+    const share=totRevEx>0?d.revEx/totRevEx:0;
+    const opexAlloc=totalOpex*share;
+    const gross=d.revEx-d.cogs-d.fot-d.kpi-opexAlloc;
+    const margin=d.revEx?gross/d.revEx*100:0;
+    const neg=gross<0;
+
+    totRev+=d.rev;totNdv+=d.ndv;totCogs+=d.cogs;totFot+=d.fot;totKpi+=d.kpi;totGross+=gross;
+
+    document.getElementById('res-'+d.id).innerHTML=`
+<div class="drow"><span>Выручка без НДС</span><span>${fmt(d.revEx)}</span></div>
+<div class="drow"><span>− НДС</span><span style="color:#991F1F">${fmt(d.ndv)}</span></div>
+<div class="drow"><span>− Себестоимость</span><span style="color:#991F1F">${fmt(d.cogs)}</span></div>
+<div class="drow"><span>− ФОТ</span><span style="color:#991F1F">${fmt(d.fot)}</span></div>
+<div class="drow"><span>− КПИ (${st[d.id].kpi}%)</span><span style="color:#991F1F">${fmt(d.kpi)}</span></div>
+<div class="drow"><span>− ОПР (доля ${(share*100).toFixed(0)}%)</span><span style="color:#991F1F">${fmt(opexAlloc)}</span></div>
+<div class="dgross ${neg?'neg':'pos'}"><span>Валовая прибыль</span><span>${neg?'▼ ':'▲ '}${fmt(gross)}</span></div>
+<div style="font-size:11px;color:#888;margin-top:3px">Маржа: ${margin.toFixed(1)}%</div>`;
+  });
+
+  const totMargin=totRevEx?totGross/totRevEx*100:0;
+
+  const cards=[
+    {l:'Выручка с НДС',v:fmt(totRev),c:''},
+    {l:'НДС к уплате',v:fmt(totNdv),c:'neg'},
+    {l:'Выручка без НДС',v:fmt(totRevEx),c:''},
+    {l:'Себестоимость',v:fmt(totCogs),c:'neg'},
+    {l:'ФОТ',v:fmt(totFot),c:'neg'},
+    {l:'КПИ менеджерам',v:fmt(totKpi),c:'neg'},
+    {l:'ОПР итого',v:fmt(totalOpex),c:'neg'},
+    {l:'Валовая прибыль',v:fmt(totGross),c:totGross>=0?'pos':'neg'},
+    {l:'Маржа валовая',v:totMargin.toFixed(1)+'%',c:totMargin>=0?'pos':'neg'},
+  ];
+  document.getElementById('sgrid').innerHTML=cards.map(c=>`<div class="sum-card"><div class="sum-lbl">${c.l}</div><div class="sum-val ${c.c}">${c.v}</div></div>`).join('');
+
+  const wf=[
+    {l:'Выручка с НДС',v:totRev,color:'#639922'},
+    {l:'− НДС',v:totNdv,color:'#E24B4A'},
+    {l:'− Себестоимость',v:totCogs,color:'#D85A30'},
+    {l:'− ФОТ',v:totFot,color:'#BA7517'},
+    {l:'− КПИ',v:totKpi,color:'#888780'},
+    {l:'− ОПР',v:totalOpex,color:'#5F5E5A'},
+    {l:'= Валовая прибыль',v:Math.abs(totGross),color:totGross>=0?'#3B6D11':'#A32D2D'},
+  ];
+  const mx=Math.max(...wf.map(i=>i.v),1);
+  document.getElementById('wfbars').innerHTML=wf.map(it=>`<div class="wf-row">
+<span class="wf-lbl">${it.l}</span>
+<div class="wf-track"><div class="wf-fill" style="width:${Math.round(it.v/mx*100)}%;background:${it.color}"></div></div>
+<span class="wf-num" style="color:${it.color}">${fmt(it.v)}</span>
+</div>`).join('');
+}
+
+buildDirs();
+rc();
+</script>
+</body>
+</html>
